@@ -26,7 +26,8 @@ require([
 
     // *** ArcGIS OAuth ***
     var appInfo = new arcgisOAuthInfo({
-        appId: "4E1s0Mv5r0c2l6W8",
+		//Updated appId on 3/20/15
+        appId: "irjq0HKi37enXup1",
         popup: true,
         portalUrl: "https://www.arcgis.com/"
     });
