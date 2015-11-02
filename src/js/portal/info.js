@@ -1,5 +1,9 @@
-define([], function () {
+define([], function() {
     var types = [
+        {
+            type: "CityEngine Web Scene",
+            icon: "webScene"
+        },
         {
             type: "Color Set",
             icon: "datafilesGray"
@@ -65,6 +69,14 @@ define([], function () {
             icon: "apps"
         },
         {
+            type: "Scene Layer",
+            icon: "sceneLayer"
+        },
+        {
+            type: "Scene Service",
+            icon: "sceneLayer"
+        },
+        {
             type: "Service Definition",
             icon: "datafiles"
         },
@@ -81,21 +93,27 @@ define([], function () {
             icon: "apps"
         },
         {
+            type: "Web Scene",
+            icon: "webScene"
+        },
+        {
             type: "WMS",
             icon: "layers"
         },
     ];
     return {
-        items: function (type) {
-            var info = types.filter(function (item) {
+        items: function(type) {
+            var info = types.filter(function(item) {
                 return item.type === type;
             })[0];
+
             if (!info) {
                 // Handle types not found in the above list.
                 return {
                     icon: "datafilesGray"
                 };
             }
+
             return info;
         }
     };
