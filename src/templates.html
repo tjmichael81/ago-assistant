@@ -43,6 +43,15 @@
 
 </script>
 
+<script type="text/template" id="serviceNameErrorTemplate">
+
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p><strong>{{ name }} is already in use.</strong> Try a different name.</p>
+    </div>
+
+</script>
+
 <script type="text/template" id="searchTemplate">
 
     <form id="searchForm" class="navbar-form navbar-left" role="search">
@@ -63,6 +72,7 @@
                             <li id="searchContent" data-url={{ portal }} class="active"><a>Search My Content</a></li>
                             <li class="divider"></li>
                             <li data-action="viewMyContent"><a>View My Content</a></li>
+                            <li data-action="viewMyGroups"><a>View My Groups</a></li>
                         </ul>
                     </div>
                 </div>
@@ -251,6 +261,27 @@
         </div>
         <div class="panel-body" id="itemDescription>
             <form role="form">
+                <h5>Quick Text Find/Replace</h5>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <input type="text" id="originalTextUserInput" list="origServiceUrlList" class="form-control" placeholder="Find">
+                            <datalist id="origServiceUrlList">
+                                <!--items are added dynamically based on a calculated unique root URL list-->
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="newTextUserInput" placeholder="Replace">
+                        </div>
+                        <div class="form-group">
+                            <button id="bulkUpdateWebmapServiceUrlsBtn" class="btn btn-primary" style="float: right">Replace</button>
+                        </div>
+                    </div>
+                    <div>
+                        <span id="stringMatchesFoundText" class="text-muted"></span>
+                    </div>
+                </form>
+                </br>
                 <div class="form-group">
                     <h4>Operational Layers</h4>
                     {{ #operationalLayers }}
@@ -262,6 +293,19 @@
                     {{ ^operationalLayers }}
                         No operational layers in this web map.
                     {{ /operationalLayers }}
+                </div>
+                <br>
+                <div class="form-group">
+                    <h4>Tables</h4>
+                    {{ #tables }}
+                    <div class="form-group">
+                        <label for="{{ id }}">{{ title }}</label>
+                        <input type="text" class="form-control" id="{{ id }}" value="{{ url }}" data-original="{{ url }}">
+                    </div>
+                    {{ /tables }}
+                    {{ ^tables }}
+                        No tables in this web map.
+                    {{ /tables }}
                 </div>
                 <br>
                 <div class="form-group">

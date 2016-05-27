@@ -33,8 +33,21 @@ define(["jquery"], function(jquery) {
                 portalUrl = portalUrl + "/";
             }
 
+            if (portalUrl.indexOf("http://") === 0 && window.location.href.indexOf("https://") === 0) {
+                portalUrl = portalUrl.replace("http://", "https://");
+            }
+
             deferred.resolve(portalUrl);
             return deferred.promise();
+        },
+
+        // Upgrade a URL from http to https.
+        upgradeUrl: function(url) {
+            if (url.indexOf("http://") === 0 && window.location.href.indexOf("https://") === 0) {
+                url = url.replace("http://", "https://");
+            }
+
+            return url;
         }
     };
 });
