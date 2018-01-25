@@ -4,15 +4,12 @@
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 {{#user}}
-                    {{username}}
+                    {{fullName}} ({{username}})
                 {{/user}}
             <b class="caret"></b></a>
             <ul class="dropdown-menu">
                 <li>
-                    <a data-toggle="modal" href="changelog.html" data-target="#changelogModal">Changelog</a>
-                </li>
-                <li>
-                    <a data-toggle="modal" data-target="#aboutModal">Help</a>
+                    <a data-toggle="modal" data-target="#aboutModal">About</a>
                 </li>
                 <li data-action="logout">
                     <a>Logout</a>
@@ -115,10 +112,23 @@
 
 <script type="text/template" id="contentTemplate">
 
-    <button id="{{ id }}" class="btn btn-default btn-block content" disabled="disabled" style="opacity: 1;" type="button" data-id="{{ id }}" data-type="{{ type }}" data-portal="{{ portal }}">
+    <div id="{{ id }}" class="btn btn-default btn-block content" style="opacity: 1;" type="button" data-id="{{ id }}" data-type="{{ type }}" data-portal="{{ portal }}">
         <span class="icon {{ icon }}"></span>
-        {{ title }}
-    </button>
+        <span class="itemTitle">{{ title }}</span>
+        <div class="itemDetailsDiv">
+            <span class="itemType">
+                <strong>Type:</strong> {{ agoType }}
+            </span>
+            <span class="itemOwner">
+                {{ #user }} | <strong>Owner:</strong> {{ user }} {{ /user }}
+            </span>
+            <span class="itemId">
+                | <strong>Item ID:</strong>
+                <a href="{{ idLink }}" target="_blank"><abbr title="{{ id }}">{{ idAbbrev }}</abbr></a>
+                <div class="copyInProgress" style="display:none;"><em>Copying</em> <img src='css/grid.svg' class='harvestCopier'/></div>
+            </span>
+        </div>
+    </div>
 
 </script>
 
@@ -149,18 +159,21 @@
         <div class="panel-body" id="itemDescription">
             <ul class="list-group">
                 <li class="list-group-item">Description
-                    <a href="{{ url }}/home/item.html?id={{ id }}" target="_blank"> (Link to Item Details)</a>
+                    <a href="{{ url }}/home/item.html?id={{ id }}" target="_blank"> (View Item Details)</a>
                 </li>
                 <li class="list-group-item">
-                    <div class="btn-group btn-group-lg edit-controls" role="group">
+                    <div class="btn-group btn-group edit-controls" role="group">
+                      <button type="button" class="btn btn-default" data-clipboard-target="#descriptionJson" title="Copy JSON" aria-label="Left Align">
+                        <span class="fa fa-lg fa-clipboard" aria-hidden="true"></span>
+                      </button>
                         <button type="button" class="btn btn-default disabled" data-action="saveEdits" aria-label="Left Align">
                             <span class="fa fa-lg fa-save" aria-hidden="true"></span>
                         </button>
-                        <button type="button" class="btn btn-default" data-action="startEdits" data-container="Description" aria-label="Left Align">
+                        <button type="button" class="btn btn-default" data-action="startEdits" data-container="Description" title="Edit JSON" aria-label="Left Align">
                             <span class="fa fa-lg fa-pencil" aria-hidden="true"></span>
                         </button>
                     </div>
-                    <pre id="descriptionJson">{{ description }}</pre>
+                    <div id="descriptionJson" class="jsonViewer">{{ description }}</div>
                 </li>
             </ul>
             {{ #data }}
@@ -168,15 +181,18 @@
                 <ul class="list-group">
                     <li class="list-group-item">Data</li>
                     <li class="list-group-item">
-                        <div class="btn-group btn-group-lg edit-controls" role="group">
+                        <div class="btn-group btn-group edit-controls" role="group">
+                            <button type="button" class="btn btn-default" data-clipboard-target="#dataJson" title="Copy JSON" aria-label="Left Align">
+                              <span class="fa fa-lg fa-clipboard" aria-hidden="true"></span>
+                            </button>
                             <button type="button" class="btn btn-default disabled" data-action="saveEdits" aria-label="Left Align">
                                 <span class="fa fa-lg fa-save" aria-hidden="true"></span>
                             </button>
-                            <button type="button" class="btn btn-default" data-action="startEdits" data-container="Data" aria-label="Left Align">
+                            <button type="button" class="btn btn-default" data-action="startEdits" data-container="Data" title="Edit JSON" aria-label="Left Align">
                                 <span class="fa fa-lg fa-pencil" aria-hidden="true"></span>
                             </button>
                         </div>
-                        <pre id="dataJson">{{ data }}</pre>
+                        <div id="dataJson" class="jsonViewer">{{ data }}</div>
                     </li>
                 </ul>
             {{ /data }}
@@ -205,17 +221,6 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <img src="{{ thumbnail }}" class="img-rounded" style="max-width: 130px; max-height: 130px; margin-top: 10px">
-                            </div>
-                            <div class="col-md-9 calContainer">
-                                <div class="col-md-1 calArrow" style="height: auto"><i id="calPrev" class="glyphicon glyphicon-backward"></i></div>
-                                <div class="col-md-10" id="statsCalendar" style="width: auto">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h4 class="text-center muted">Recent Activity</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 calArrow" style="height: auto"><i id="calNext" class="glyphicon glyphicon-forward"></i></div>
                             </div>
                         </div>
                         <br>
@@ -259,7 +264,7 @@
         <div class="panel-heading">
             <h2 class="panel-title">{{ webmapTitle }}</h2>
         </div>
-        <div class="panel-body" id="itemDescription>
+        <div class="panel-body" id="itemDescription">
             <form role="form">
                 <h5>Quick Text Find/Replace</h5>
                 <form class="form-inline">
@@ -329,7 +334,7 @@
 
 <script type="text/template" id="updateSuccessTemplate">
 
-    <div class="alert alert-success alert-dismissable" style="position: absolute; z-index: 99"">
+    <div class="alert alert-success alert-dismissable" style="position: absolute; z-index: 99">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong>Success!</strong>
     </div>
@@ -351,7 +356,7 @@
         <div class="panel-heading">
             <h2 class="panel-title">{{ title }}</h2>
         </div>
-        <div class="panel-body" id="itemDescription>
+        <div class="panel-body" id="itemDescription">
             <form role="form">
                 <div class="form-group">
                     <div class="form-group">
